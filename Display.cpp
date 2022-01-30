@@ -14,6 +14,10 @@ Display::Display(bool enabled) {
     }
 }
 
+void Display::show(SensorData data) {
+    showSensors(data.moisture, data.temperature, data.light);
+}
+
 void Display::showSensors(int moisture, float temperature, int light) {
     if (_enabled) {
         lcd.clear();

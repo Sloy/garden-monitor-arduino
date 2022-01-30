@@ -1,14 +1,12 @@
 #ifndef Sensors_h
 #define Sensors_h
 
-#include "Arduino.h"
+#include "SensorData.h"
 
 class Sensors {
    public:
     Sensors(int moistureSensorPin, int temperatureSensorPin, int lightSensorPin);
-    /**
-    * Returns the ground moisture value in percentage, from 0 (mid air) to 100 (submerged in water).
-    */
+    SensorData read();
     int readMoisture();
     int readLight();
     float readTemperature();

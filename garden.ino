@@ -11,10 +11,8 @@ void setup() {
 }
 
 void loop() {
-    int moisture = sensors.readMoisture();
-    int light = sensors.readLight();
-    float temperature = sensors.readTemperature();
-    display.showSensors(moisture, temperature, light);
+    SensorData data = sensors.read();
+    display.show(data);
     blink();
     delay(1000);
 }

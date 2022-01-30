@@ -2,11 +2,16 @@
 #include "Sensors.h"
 
 #include "Arduino.h"
+#include "SensorData.h"
 
 Sensors::Sensors(int moistureSensorPin, int temperatureSensorPin, int lightSensorPin) {
     _moistureSensorPin = moistureSensorPin;
     _temperatureSensorPin = temperatureSensorPin;
     _lightSensorPin = lightSensorPin;
+}
+
+SensorData Sensors::read() {
+    return SensorData(readMoisture(), readTemperature(), readLight());
 }
 
 int Sensors::readMoisture() {
