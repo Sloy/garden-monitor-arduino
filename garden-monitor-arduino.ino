@@ -3,7 +3,7 @@
 #include "config.h"
 #include "secrets.h"
 
-Sensors sensors(MOISTURE_PIN, TEMPERATURE_PIN, LIGHT_PIN);
+Sensors sensors;
 Display display(DISPLAY_ENABLED);
 
 void setup() {
@@ -14,15 +14,18 @@ void setup() {
 }
 
 void loop() {
+    ledIndicator(true);
     SensorData data = sensors.read();
     display.show(data);
-    blink();
-    delay(1000);
+    ledIndicator(false);
+    delay(2000);
 }
 
-void blink() {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(50);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(50);
+void ledIndicator(bool on) {
+    delay(100);
+    if (on) {
+        digitalWrite(LED_BUILTIN, HIGH);
+    } else {
+        digitalWrite(LED_BUILTIN, LOW);
+    }
 }

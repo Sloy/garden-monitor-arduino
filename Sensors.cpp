@@ -3,11 +3,11 @@
 
 #include "Arduino.h"
 #include "SensorData.h"
+#include "config.h"
 
-Sensors::Sensors(int moistureSensorPin, int temperatureSensorPin, int lightSensorPin) {
-    _moistureSensorPin = moistureSensorPin;
-    _temperatureSensorPin = temperatureSensorPin;
-    _lightSensorPin = lightSensorPin;
+Sensors::Sensors() {
+    pinMode(MOISTURE_POWER, OUTPUT);
+    digitalWrite(MOISTURE_POWER, HIGH);
 }
 
 SensorData Sensors::read() {
@@ -15,20 +15,22 @@ SensorData Sensors::read() {
 }
 
 int Sensors::readMoisture() {
-    delay(5);
-    int moistureValue = analogRead(_moistureSensorPin);
+    digitalWrite(MOISTURE_POWER, HIGH);
+    int moistureValue = analogRead(MOISTURE_PIN);
+    delay(10);
+    digitalWrite(MOISTURE_POWER, LOW);
     int percentage = 100 - map(moistureValue, 250, 1023, 0, 100);
     return percentage;
 }
 int Sensors::readLight() {
-    delay(5);
-    int lightValue = analogRead(_lightSensorPin);
+    int lightValue = analogRead(LIGHT_PIN);
+    delay(10);
     int percentage = map(lightValue, 0, 1023, 0, 100);
     return percentage;
 }
 float Sensors::readTemperature() {
-    delay(5);
-    int tempValue = analogRead(_temperatureSensorPin);
+    int tempValue = analogRead(TEMPERATURE_PIN);
+    delay(10);
     float voltage = (tempValue / 1024.0) * 5.0;
     float temperature = (voltage - .5) * 100;
     return temperature;
