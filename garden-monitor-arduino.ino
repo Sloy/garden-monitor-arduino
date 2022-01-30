@@ -18,7 +18,7 @@ void loop() {
     SensorData data = sensors.read();
     display.show(data);
     ledIndicator(false);
-    delay(2000);
+    delay(INTERVAL_SECONDS * 1000);
 }
 
 void ledIndicator(bool on) {
