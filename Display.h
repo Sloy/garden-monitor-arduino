@@ -8,6 +8,7 @@
 class Display {
    public:
     Display(bool enabled);
+    void begin();
     void show(SensorData sensorData);
     void showSensors(int moisture, float temperature, int light);
 

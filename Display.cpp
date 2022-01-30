@@ -8,12 +8,13 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 Display::Display(bool enabled) {
     _enabled = enabled;
+}
+void Display::begin() {
     if (_enabled) {
         lcd.begin(16, 2);
         lcd.clear();
     }
 }
-
 void Display::show(SensorData data) {
     showSensors(data.moisture, data.temperature, data.light);
 }

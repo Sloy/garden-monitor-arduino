@@ -7,6 +7,7 @@ Display display(true);
 void setup() {
     Serial.begin(9600);
     Serial.println("Monitoring ...");
+    display.begin();
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
