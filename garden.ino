@@ -1,8 +1,10 @@
 #include "Display.h"
 #include "Sensors.h"
+#include "config.h"
+#include "secrets.h"
 
-Sensors sensors(/* moisture */ A0, /* temperature */ A1, /* light */ A2);
-Display display(true);
+Sensors sensors(MOISTURE_PIN, TEMPERATURE_PIN, LIGHT_PIN);
+Display display(DISPLAY_ENABLED);
 
 void setup() {
     Serial.begin(9600);
