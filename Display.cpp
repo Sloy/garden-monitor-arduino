@@ -20,6 +20,12 @@ void Display::show(SensorData data) {
 }
 
 void Display::showSensors(int moisture, float temperature, int light) {
+    Serial.print("Moisture=");
+    Serial.print(moisture);
+    Serial.print("\tTemperature=");
+    Serial.print(temperature);
+    Serial.print("\tLight=");
+    Serial.println(light);
     if (_enabled) {
         lcd.clear();
         lcd.setCursor(0, 0);
