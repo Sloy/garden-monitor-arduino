@@ -3,14 +3,12 @@
 #include <LiquidCrystal.h>
 
 #include "Arduino.h"
+#include "config.h"
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-Display::Display(bool enabled) {
-    _enabled = enabled;
-}
 void Display::begin() {
-    if (_enabled) {
+    if (DISPLAY_ENABLED) {
         lcd.begin(16, 2);
         lcd.clear();
     }
@@ -26,7 +24,7 @@ void Display::showSensors(int moisture, float temperature, int light) {
     Serial.print(temperature);
     Serial.print("\tLight=");
     Serial.println(light);
-    if (_enabled) {
+    if (DISPLAY_ENABLED) {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Agua ");

@@ -4,7 +4,7 @@
 #include "secrets.h"
 
 Sensors sensors;
-Display display(DISPLAY_ENABLED);
+Display display;
 
 void setup() {
     Serial.begin(9600);
@@ -22,7 +22,6 @@ void loop() {
 }
 
 void ledIndicator(bool on) {
-    delay(100);
     if (on) {
         digitalWrite(LED_BUILTIN, HIGH);
     } else {
