@@ -43,10 +43,10 @@ void loop() {
         delay(1000); // For debugging status led
         // Run pump
         server.reportPump(true);
+        server.log("pump", "Pump ON");
         led.setCyan();
         pump.activateFor(PUMP_DURATION);
-        server.reportPump(false);
-        //led.off();
+        server.log("pump", "Pump OFF");
 
         // Is it wet?
         data = sensors.read();

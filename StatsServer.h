@@ -13,7 +13,8 @@ class StatsServer {
      */
     bool sendData(SensorData data);
 
-    bool reportPump(bool status);
+    bool reportPump(bool pumpStatus);
+    bool log(String tag, String message);
 
    private:
     /**
