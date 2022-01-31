@@ -5,14 +5,14 @@
 #include "secrets.h"
 
 #define SENSOR_NAME "test"  // Add unique name for this sensor
-#define INTERVAL_SECONDS 5  // Add measurement interval (e.g. 1 min)
+#define INTERVAL_SECONDS 60  // Add measurement interval (e.g. 1 min)
 
 #define MOISTURE_POWER 7    // Which pin is soil moisture sensor connected to as a source of power (prevents fast corrosioon)
 #define MOISTURE_PIN A0     // Which pin is soil moisture sensor connected to
 #define TEMPERATURE_PIN A1  // Which pin is temperature sensor connected to
 #define LIGHT_PIN A2        // Which pin is photoresistor connected to
 
-#define LOGGER true            // Enable logging messages through Serial
+#define LOGGER false            // Enable logging messages through Serial
 #define WAIT_FOR_LOGGER false  // Stops execution until there is a Serial connection for logging
 #define RGB_LED true           // Enable the MK1010 board RGB led for status indication
 #define DISPLAY_ENABLED false  // Whether the LCD screen is connected to show sensor data

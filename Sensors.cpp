@@ -54,13 +54,13 @@ float Sensors::readTemperature() {
 }
 
 int Sensors::fakeMoisture() {
-    return random(40, 50);
+    return random(45, 60);
 }
 
 int Sensors::fakeLight() {
-    return random(70, 90);
+    return random(60, 75);
 }
 
 float Sensors::fakeTemperature() {
-    return ((float)random(160, 180)) / 10.0;
+    return ((float)random(150, 170)) / 10.0;
 }
