@@ -54,5 +54,5 @@ int Sensors::fakeLight() {
 }
 
 float Sensors::fakeTemperature() {
-    return random(16.0, 18.0);
+    return ((float)random(160, 180)) / 10.0;
 }
