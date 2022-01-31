@@ -1,18 +1,18 @@
 #include "StatsServer.h"
-#include "Clock.h"
 
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
 
+#include "Clock.h"
 #include "config.h"
 
 char ssid[] = WIFI_SSID;      // your network SSID (name)
 char pass[] = WIFI_PASSWORD;  // your network password (use for WPA, or use as key for WEP)
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
-char serverAddress[] = "graphite-us-central1.grafana.net";
+char serverAddress[] = GRAFANA_SERVER;
 
-WiFiClient wifi;
+WiFiSSLClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, 443);
 Clock clock;
 
@@ -37,25 +37,31 @@ void StatsServer::begin() {
 }
 
 void StatsServer::sendData(SensorData data) {
-    Serial.println("making POST request");
-    String contentType = "application/json";
+    String endpoint = "/graphite/metrics";
     int ts = clock.now();
     String body = String("[") +
-                  "{\"name\":\"temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"mtype\":\"gauge\",\"time\":" + ts + "}," +
-                  "{\"name\":\"moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"mtype\":\"gauge\",\"time\":" + ts + "}," +
-                  "{\"name\":\"light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"mtype\":\"gauge\",\"time\":" + ts + "}]";
+                  "{\"name\":\"" + SENSOR_NAME + ".temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"time\":" + ts + "}," +
+                  "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + ts + "}," +
+                  "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + ts + "}]";
+
+    Serial.print("-> POST " + endpoint + "\t");
+    Serial.println(body);
 
     client.beginRequest();
-    client.post("/metrics");
+    client.post(endpoint);
     client.sendBasicAuth(GRAPHITE_USER, GRAPHITE_API_KEY);
+    client.sendHeader("Content-Type", "application/json");
+    client.sendHeader("Content-Length", body.length());
+    client.beginBody();
+    client.print(body);
     client.endRequest();
 
     // read the status code and body of the response
     int statusCode = client.responseStatusCode();
     String response = client.responseBody();
 
-    Serial.print("Status code: ");
-    Serial.println(statusCode);
-    Serial.print("Response: ");
+    Serial.print("<- POST ");
+    Serial.print(statusCode);
+    Serial.print("\t");
     Serial.println(response);
 }
