@@ -1,9 +1,11 @@
 #include "Display.h"
 #include "Sensors.h"
+#include "StatsServer.h"
 #include "config.h"
 
 Sensors sensors;
 Display display;
+StatsServer server;
 
 void setup() {
     Serial.begin(9600);
@@ -16,6 +18,7 @@ void loop() {
     ledIndicator(true);
     SensorData data = sensors.read();
     display.show(data);
+    server.sendData(data);
     ledIndicator(false);
     delay(INTERVAL_SECONDS * 1000);
 }
