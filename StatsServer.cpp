@@ -36,7 +36,7 @@ void StatsServer::begin() {
     clock.begin();
 }
 
-void StatsServer::sendData(SensorData data) {
+bool StatsServer::sendData(SensorData data) {
     String endpoint = "/graphite/metrics";
     int ts = clock.now();
     String body = String("[") +
@@ -64,4 +64,6 @@ void StatsServer::sendData(SensorData data) {
     Serial.print(statusCode);
     Serial.print("\t");
     Serial.println(response);
+
+    return statusCode >= 200 & statusCode < 300;
 }
