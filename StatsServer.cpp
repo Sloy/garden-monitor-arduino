@@ -1,4 +1,5 @@
 #include "StatsServer.h"
+#include "Clock.h"
 
 #include <Arduino.h>
 #include <ArduinoHttpClient.h>
@@ -13,6 +14,7 @@ char serverAddress[] = "graphite-us-central1.grafana.net";
 
 WiFiClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, 443);
+Clock clock;
 
 void StatsServer::begin() {
     while (status != WL_CONNECTED) {
@@ -30,12 +32,14 @@ void StatsServer::begin() {
     IPAddress ip = WiFi.localIP();
     Serial.print("IP Address: ");
     Serial.println(ip);
+
+    clock.begin();
 }
 
 void StatsServer::sendData(SensorData data) {
     Serial.println("making POST request");
     String contentType = "application/json";
-    int ts = 0;
+    int ts = clock.now();
     String body = String("[") +
                   "{\"name\":\"temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"mtype\":\"gauge\",\"time\":" + ts + "}," +
                   "{\"name\":\"moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"mtype\":\"gauge\",\"time\":" + ts + "}," +
