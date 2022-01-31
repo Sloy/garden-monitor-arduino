@@ -11,7 +11,15 @@ Sensors::Sensors() {
 }
 
 SensorData Sensors::read() {
-    return SensorData(readMoisture(), readTemperature(), readLight());
+    SensorData data = SensorData(readMoisture(), readTemperature(), readLight());
+    LOG("Sensor data: ");
+    LOG("Moisture=");
+    LOG(data.moisture);
+    LOG("\tTemperature=");
+    LOG(data.temperature);
+    LOG("\tLight=");
+    LOGLN(data.light);
+    return data;
 }
 
 int Sensors::readMoisture() {

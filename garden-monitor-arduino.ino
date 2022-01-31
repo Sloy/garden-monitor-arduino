@@ -10,8 +10,15 @@ StatsServer server;
 WiFiLed led(0.01);
 
 void setup() {
+    led.setPurple();
+#if LOGGER
     Serial.begin(9600);
-    Serial.println("Monitoring ...");
+#if WAIT_FOR_LOGGER
+    while (!Serial)
+        ;
+#endif
+#endif
+    LOGLN("Setup ...");
     led.setBlue();
     display.begin();
     server.begin();

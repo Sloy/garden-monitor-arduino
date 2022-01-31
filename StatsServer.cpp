@@ -18,20 +18,15 @@ Clock clock;
 
 void StatsServer::begin() {
     while (status != WL_CONNECTED) {
-        Serial.print("Attempting to connect to Network named: ");
-        Serial.println(ssid);  // print the network name (SSID);
-
-        // Connect to WPA/WPA2 network:
+        LOG("Attempting to connect to Network named: ");
+        LOGLN(ssid);
         status = WiFi.begin(ssid, pass);
     }
-    // print the SSID of the network you're attached to:
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
-
-    // print your WiFi shield's IP address:
-    IPAddress ip = WiFi.localIP();
-    Serial.print("IP Address: ");
-    Serial.println(ip);
+    LOGLN("Connected!");
+    LOG("- SSID: ");
+    LOGLN(WiFi.SSID());
+    LOG("- IP Address: ");
+    LOGLN(WiFi.localIP());
 
     clock.begin();
 }
@@ -44,8 +39,10 @@ bool StatsServer::sendData(SensorData data) {
                   "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + ts + "}," +
                   "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + ts + "}]";
 
-    Serial.print("-> POST " + endpoint + "\t");
-    Serial.println(body);
+    LOG("-> POST ");
+    LOG(endpoint);
+    LOG("\t");
+    LOGLN(body);
 
     client.beginRequest();
     client.post(endpoint);
@@ -60,10 +57,10 @@ bool StatsServer::sendData(SensorData data) {
     int statusCode = client.responseStatusCode();
     String response = client.responseBody();
 
-    Serial.print("<- POST ");
-    Serial.print(statusCode);
-    Serial.print("\t");
-    Serial.println(response);
+    LOG("<- POST ");
+    LOG(status);
+    LOG("\t");
+    LOGLN(response);
 
     return statusCode >= 200 & statusCode < 300;
 }
