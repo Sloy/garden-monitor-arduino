@@ -1,7 +1,6 @@
 #include "Display.h"
 #include "Sensors.h"
 #include "config.h"
-#include "secrets.h"
 
 Sensors sensors;
 Display display;
