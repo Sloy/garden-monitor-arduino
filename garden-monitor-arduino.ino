@@ -11,6 +11,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println("Monitoring ...");
     display.begin();
+    server.begin();
     pinMode(LED_BUILTIN, OUTPUT);
 }
 

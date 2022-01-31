@@ -10,6 +10,11 @@ class Sensors {
     int readMoisture();
     int readLight();
     float readTemperature();
+
+   private:
+    int fakeMoisture();
+    int fakeLight();
+    float fakeTemperature();
 };
 
 #endif

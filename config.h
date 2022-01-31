@@ -13,5 +13,6 @@
 #define LIGHT_PIN A2        // Which pin is photoresistor connected to
 
 #define DISPLAY_ENABLED true  // Whether the LCD screen is connected to show sensor data
+#define FAKE_SENSOR false     // Emit fake sensor data to test the code without connecting all sensors
 
 #endif

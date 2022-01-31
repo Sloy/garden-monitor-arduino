@@ -15,6 +15,9 @@ SensorData Sensors::read() {
 }
 
 int Sensors::readMoisture() {
+    if (FAKE_SENSOR) {
+        return fakeMoisture();
+    }
     digitalWrite(MOISTURE_POWER, HIGH);
     int moistureValue = analogRead(MOISTURE_PIN);
     delay(10);
@@ -23,15 +26,33 @@ int Sensors::readMoisture() {
     return percentage;
 }
 int Sensors::readLight() {
+    if (FAKE_SENSOR) {
+        return fakeLight();
+    }
     int lightValue = analogRead(LIGHT_PIN);
     delay(10);
     int percentage = map(lightValue, 0, 1023, 0, 100);
     return percentage;
 }
 float Sensors::readTemperature() {
+    if (FAKE_SENSOR) {
+        return fakeTemperature();
+    }
     int tempValue = analogRead(TEMPERATURE_PIN);
     delay(10);
     float voltage = (tempValue / 1024.0) * 5.0;
     float temperature = (voltage - .5) * 100;
     return temperature;
+}
+
+int Sensors::fakeMoisture() {
+    return random(40, 50);
+}
+
+int Sensors::fakeLight() {
+    return random(70, 90);
+}
+
+float Sensors::fakeTemperature() {
+    return random(16.0, 18.0);
 }
