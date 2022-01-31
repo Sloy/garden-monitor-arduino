@@ -52,11 +52,11 @@ void loop() {
         data = sensors.read();
         server.sendData(data);
         led.setGreen();
-        data.moisture = 100;
         bool isDry = data.moisture < MOISTURE_THREADSHOLD;
         if (isDry) {
             //repeat? or error?
             LOGLN("!warn! Still dry after watering. What to do, take a poo");
+            server.log("pump", "W: Still dry");
             led.setOrange();
         }
     }
