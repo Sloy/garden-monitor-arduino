@@ -13,6 +13,7 @@ class WiFiLed {
     void setPurple();
     void setPink();
     void setCyan();
+    void setOrange();
 
    private:
     float _brightness;

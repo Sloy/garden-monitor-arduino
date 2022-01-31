@@ -44,3 +44,6 @@ void WiFiLed::setPink() {
 void WiFiLed::setCyan() {
     set(77, 221, 250);
 }
+void WiFiLed::setOrange() {
+    set(247, 140, 32);
+}

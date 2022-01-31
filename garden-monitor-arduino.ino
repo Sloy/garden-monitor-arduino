@@ -1,4 +1,5 @@
 #include "Display.h"
+#include "Pump.h"
 #include "Sensors.h"
 #include "StatsServer.h"
 #include "WiFiLed.h"
@@ -8,6 +9,7 @@ Sensors sensors;
 Display display;
 StatsServer server;
 WiFiLed led(0.01);
+Pump pump;
 
 void setup() {
     led.setPurple();
@@ -27,16 +29,48 @@ void setup() {
 
 void loop() {
     ledIndicator(true);
+
+    // Read data
     SensorData data = sensors.read();
     display.show(data);
+
+    // Publish data
     bool success = server.sendData(data);
+    ledStatus(success);
+
+    // Should we water?
+    if (data.moisture < MOISTURE_THREADSHOLD) {
+        delay(1000); // For debugging status led
+        // Run pump
+        server.reportPump(true);
+        led.setCyan();
+        pump.activateFor(PUMP_DURATION);
+        server.reportPump(false);
+        //led.off();
+
+        // Is it wet?
+        data = sensors.read();
+        server.sendData(data);
+        led.setGreen();
+        data.moisture = 100;
+        bool isDry = data.moisture < MOISTURE_THREADSHOLD;
+        if (isDry) {
+            //repeat? or error?
+            LOGLN("!warn! Still dry after watering. What to do, take a poo");
+            led.setOrange();
+        }
+    }
+
+    ledIndicator(false);
+    delay(INTERVAL_SECONDS * 1000);
+}
+
+void ledStatus(bool success) {
     if (success) {
         led.setGreen();
     } else {
         led.setRed();
     }
-    ledIndicator(false);
-    delay(INTERVAL_SECONDS * 1000);
 }
 
 void ledIndicator(bool on) {

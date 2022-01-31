@@ -7,6 +7,10 @@
 #include "Clock.h"
 #include "config.h"
 
+#define STATUS_ON 1
+#define STATUS_OFF 0
+#define STATUS_ERROR -1
+
 char ssid[] = WIFI_SSID;      // your network SSID (name)
 char pass[] = WIFI_PASSWORD;  // your network password (use for WPA, or use as key for WEP)
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
@@ -32,13 +36,34 @@ void StatsServer::begin() {
 }
 
 bool StatsServer::sendData(SensorData data) {
-    String endpoint = "/graphite/metrics";
     int ts = clock.now();
     String body = String("[") +
                   "{\"name\":\"" + SENSOR_NAME + ".temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"time\":" + ts + "}," +
                   "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + ts + "}," +
                   "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + ts + "}]";
 
+    int statusCode = sendToGraphite(body);
+    return statusCode >= 200 & statusCode < 300;
+}
+
+bool StatsServer::reportPump(bool status) {
+    int ts = clock.now();
+    int value;
+    if (status) {
+        value = STATUS_ON;
+    } else {
+        value = STATUS_OFF;
+    }
+    String body = String("[") +
+                  "{\"name\":\"" + SENSOR_NAME + ".pump\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + value + ",\"time\":" + ts + "}]";
+
+    int statusCode = sendToGraphite(body);
+    return statusCode >= 200 & statusCode < 300;
+}
+
+int StatsServer::sendToGraphite(String body) {
+    String endpoint = "/graphite/metrics";
+    LOGLN("-------------");
     LOG("-> POST ");
     LOG(endpoint);
     LOG("\t");
@@ -58,9 +83,10 @@ bool StatsServer::sendData(SensorData data) {
     String response = client.responseBody();
 
     LOG("<- POST ");
-    LOG(status);
+    LOG(statusCode);
     LOG("\t");
     LOGLN(response);
+    LOGLN("-------------");
 
-    return statusCode >= 200 & statusCode < 300;
+    return statusCode;
 }
