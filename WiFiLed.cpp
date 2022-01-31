@@ -22,6 +22,10 @@ void WiFiLed::set(uint8_t red, uint8_t green, uint8_t blue) {
     WiFiDrv::analogWrite(BLUE_PIN, blue * _brightness);
 }
 
+void WiFiLed::off(){
+    set(0, 0, 0);
+}
+
 void WiFiLed::setRed() {
     set(255, 0, 0);
 }
