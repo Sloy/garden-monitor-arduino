@@ -18,6 +18,7 @@ int status = WL_IDLE_STATUS;  // the Wifi radio's status
 WiFiSSLClient wifi;
 HttpClient client = HttpClient(wifi, GRAFANA_SERVER, 443);
 HttpClient lokiClient = HttpClient(wifi, LOKI_SERVER, 443);
+HttpClient influxClient = HttpClient(wifi, INFLUXDB_SERVER, 443);
 Clock clock;
 
 void StatsServer::begin() {
@@ -37,16 +38,14 @@ void StatsServer::begin() {
 
 bool StatsServer::sendData(SensorData data) {
     int ts = clock.now();
-    String body = String("[") +
-                  "{\"name\":\"" + SENSOR_NAME + ".temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"time\":" + ts + "}," +
-                  "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + ts + "}," +
-                  "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + ts + "}]";
+    int statusCode = sendToGraphite(data, ts);
+    statusCode = sendToInfluxDB(data, ts);
 
-    int statusCode = sendToGraphite(body);
     return statusCode >= 200 & statusCode < 300;
 }
 
 bool StatsServer::reportPump(bool pumpStatus) {
+    /*
     int ts = clock.now();
     int value, interval;
     if (pumpStatus) {
@@ -61,17 +60,22 @@ bool StatsServer::reportPump(bool pumpStatus) {
 
     int statusCode = sendToGraphite(body);
     return statusCode >= 200 & statusCode < 300;
+    */
 }
 
-int StatsServer::sendToGraphite(String body) {
+int StatsServer::sendToGraphite(SensorData data, int timestamp) {
     if (!SEND_DATA) {
         return 200;
     }
+    String body = String("[") +
+                  "{\"name\":\"" + SENSOR_NAME + ".temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"time\":" + timestamp + "}," +
+                  "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + timestamp + "}," +
+                  "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + timestamp + "}]";
     String endpoint = "/graphite/metrics";
     LOGLN("-------------");
     LOG("-> POST ");
     LOG(endpoint);
-    LOG("\t");
+    LOG("\t\t\t\t");
     LOGLN(body);
 
     client.beginRequest();
@@ -89,7 +93,42 @@ int StatsServer::sendToGraphite(String body) {
 
     LOG("<- POST ");
     LOG(statusCode);
-    LOG("\t");
+    LOG("\t\t\t\t");
+    LOGLN(response);
+    LOGLN("-------------");
+
+    return statusCode;
+}
+
+int StatsServer::sendToInfluxDB(SensorData data, int timestamp) {
+    if (!SEND_DATA) {
+        return 200;
+    }
+    String body = String("sensor temperature=") + data.temperature + ",moisture="+data.moisture+",light="+data.light;
+    String endpoint = String("/api/v2/write?org=") + INFLUX_ORG_ID + "&bucket=" + INFLUX_BUCKET + "&precision=s";
+    ;
+    LOGLN("-------------");
+    LOG("-> POST ");
+    LOG(endpoint);
+    LOG("\t\t\t\t");
+    LOGLN(body);
+
+    influxClient.beginRequest();
+    influxClient.post(endpoint);
+    influxClient.sendHeader("Content-Type", "text/plain");
+    influxClient.sendHeader("Content-Length", body.length());
+    influxClient.sendHeader("Authorization", INFLUX_TOKEN);
+    influxClient.beginBody();
+    influxClient.print(body);
+    influxClient.endRequest();
+
+    // read the status code and body of the response
+    int statusCode = influxClient.responseStatusCode();
+    String response = influxClient.responseBody();
+
+    LOG("<- POST ");
+    LOG(statusCode);
+    LOG("\t\t\t\t");
     LOGLN(response);
     LOGLN("-------------");
 
@@ -108,7 +147,7 @@ bool StatsServer::log(String tag, String message) {
     LOGLN("-------------");
     LOG("-> POST ");
     LOG(endpoint);
-    LOG("\t");
+    LOG("\t\t\t\t");
     LOGLN(body);
 
     lokiClient.beginRequest();
@@ -121,12 +160,12 @@ bool StatsServer::log(String tag, String message) {
     lokiClient.endRequest();
 
     // read the status code and body of the response
-    int statusCode = client.responseStatusCode();
-    String response = client.responseBody();
+    int statusCode = lokiClient.responseStatusCode();
+    String response = lokiClient.responseBody();
 
     LOG("<- POST ");
     LOG(statusCode);
-    LOG("\t");
+    LOG("\t\t\t\t");
     LOGLN(response);
     LOGLN("-------------");
 

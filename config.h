@@ -28,6 +28,7 @@
 
 #define GRAFANA_SERVER "graphite-prod-01-eu-west-0.grafana.net"
 #define LOKI_SERVER "logs-prod-eu-west-0.grafana.net"
+#define INFLUXDB_SERVER "eu-central-1-1.aws.cloud2.influxdata.com"
 
 #if LOGGER
 #define LOG(x) Serial.print(x)

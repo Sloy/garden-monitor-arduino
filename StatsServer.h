@@ -20,7 +20,8 @@ class StatsServer {
     /**
      * Returns the status code
      */
-    int sendToGraphite(String body);
+    int sendToGraphite(SensorData data, int timestamp);
+    int sendToInfluxDB(SensorData data, int timestamp);
 };
 
 #endif
