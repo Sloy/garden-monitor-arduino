@@ -48,7 +48,7 @@ float Sensors::readTemperature() {
     }
     int tempValue = analogRead(TEMPERATURE_PIN);
     delay(10);
-    float voltage = (tempValue / 1024.0) * 5.0;
+    float voltage = (tempValue / 1024.0) * BOARD_VOLTAGE;
     float temperature = (voltage - .5) * 100;
     return temperature;
 }

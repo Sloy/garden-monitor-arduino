@@ -13,6 +13,7 @@
 #define MOISTURE_PIN A0     // Which pin is soil moisture sensor connected to
 #define TEMPERATURE_PIN A1  // Which pin is temperature sensor connected to
 #define LIGHT_PIN A2        // Which pin is photoresistor connected to
+#define BOARD_VOLTAGE 3.3   // What the operation voltage of the board (3.3, 5.0)
 
 #define LOGGER true            // Enable logging messages through Serial
 #define WAIT_FOR_LOGGER true   // Stops execution until there is a Serial connection for logging
