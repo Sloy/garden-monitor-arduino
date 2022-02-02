@@ -64,6 +64,9 @@ bool StatsServer::reportPump(bool pumpStatus) {
 }
 
 int StatsServer::sendToGraphite(String body) {
+    if (!SEND_DATA) {
+        return 200;
+    }
     String endpoint = "/graphite/metrics";
     LOGLN("-------------");
     LOG("-> POST ");
@@ -94,6 +97,9 @@ int StatsServer::sendToGraphite(String body) {
 }
 
 bool StatsServer::log(String tag, String message) {
+    if (true | !SEND_DATA) {
+        return 200;
+    }
     int ts = clock.now();
     String endpoint = "/loki/api/v1/push";
     String body = String("{\"streams\": [{ \"stream\": { \"label\": \"") +

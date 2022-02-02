@@ -20,6 +20,7 @@
 #define RGB_LED true           // Enable the MK1010 board RGB led for status indication
 #define DISPLAY_ENABLED false  // Whether the LCD screen is connected to show sensor data
 #define FAKE_SENSOR true       // Emit fake sensor data to test the code without connecting all sensors
+#define SEND_DATA true         // Enables sending data to the clod
 
 #define GRAFANA_SERVER "graphite-prod-01-eu-west-0.grafana.net"
 #define LOKI_SERVER "logs-prod-eu-west-0.grafana.net"
