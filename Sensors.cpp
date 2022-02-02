@@ -27,6 +27,7 @@ int Sensors::readMoisture() {
         return fakeMoisture();
     }
     digitalWrite(MOISTURE_POWER, HIGH);
+    delay(100);
     int moistureValue = analogRead(MOISTURE_PIN);
     delay(10);
     digitalWrite(MOISTURE_POWER, LOW);
