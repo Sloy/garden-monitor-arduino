@@ -1,3 +1,5 @@
+#include <WiFiNINA.h>
+
 #include "Display.h"
 #include "Pump.h"
 #include "Sensors.h"
@@ -8,7 +10,7 @@
 Sensors sensors;
 Display display;
 StatsServer server;
-WiFiLed led(0.01);
+WiFiLed led(0.1);
 Pump pump;
 
 void setup() {
@@ -42,7 +44,7 @@ void loop() {
     waterPump(data);
 
     ledIndicator(false);
-    delay(INTERVAL_SECONDS * 1000);
+    wakeLock();
 }
 
 void waterPump(SensorData data) {
@@ -69,6 +71,26 @@ void waterPump(SensorData data) {
                 led.setOrange();
             }
         }
+    }
+}
+
+void wakeLock() {
+    if (WAKE_LOCK) {
+        server.log("WAKE", "Wake locked");
+        int delayLeft = INTERVAL_SECONDS;
+        while (delayLeft > 0) {
+            LOG("(WAKE) ... Keeping wake for ");
+            LOG(delayLeft);
+            LOGLN(" seconds...");
+            delay(WAKE_LOCK_INTERVAL * 1000);
+            delayLeft -= WAKE_LOCK_INTERVAL;
+            // Perform a energy-expensive operation.
+            WiFi.scanNetworks();
+        }
+        LOGLN("(WAKE) Wake unlocked. Continuing with next loop.");
+        server.log("WAKE", "Wake unlocked");
+    } else {
+        delay(INTERVAL_SECONDS * 1000);
     }
 }
 

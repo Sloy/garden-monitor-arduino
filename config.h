@@ -23,6 +23,9 @@
 #define SEND_DATA true         // Enables sending data to the clod
 #define PUMP false             // Enables the connected pump when the moisture level drops below the threadshold.
 
+#define WAKE_LOCK false        // Workaround when powering from a Power Bank. The Arduino doesn't consume enough power to keep the battery on.
+#define WAKE_LOCK_INTERVAL 20  // How many seconds to wait between Wake Lock pings.
+
 #define GRAFANA_SERVER "graphite-prod-01-eu-west-0.grafana.net"
 #define LOKI_SERVER "logs-prod-eu-west-0.grafana.net"
 
