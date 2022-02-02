@@ -4,10 +4,10 @@
 #include "Arduino.h"
 #include "secrets.h"
 
-#define SENSOR_NAME "test"        // Add unique name for this sensor
-#define INTERVAL_SECONDS 60       // Add measurement interval (e.g. 1 min)
+#define SENSOR_NAME "test"       // Add unique name for this sensor
+#define INTERVAL_SECONDS 60      // Add measurement interval (e.g. 1 min)
 #define MOISTURE_THREADSHOLD 70  // Moisture % at which we should water the plants
-#define PUMP_DURATION 20           // Number of seconds to run the pump for watering
+#define PUMP_DURATION 20         // Number of seconds to run the pump for watering
 
 #define MOISTURE_POWER 7    // Which pin is soil moisture sensor connected to as a source of power (prevents fast corrosioon)
 #define MOISTURE_PIN A0     // Which pin is soil moisture sensor connected to
@@ -21,6 +21,7 @@
 #define DISPLAY_ENABLED false  // Whether the LCD screen is connected to show sensor data
 #define FAKE_SENSOR true       // Emit fake sensor data to test the code without connecting all sensors
 #define SEND_DATA true         // Enables sending data to the clod
+#define PUMP false             // Enables the connected pump when the moisture level drops below the threadshold.
 
 #define GRAFANA_SERVER "graphite-prod-01-eu-west-0.grafana.net"
 #define LOKI_SERVER "logs-prod-eu-west-0.grafana.net"

@@ -39,31 +39,37 @@ void loop() {
     bool success = server.sendData(data);
     ledStatus(success);
 
-    // Should we water?
-    if (data.moisture < MOISTURE_THREADSHOLD) {
-        delay(1000); // For debugging status led
-        // Run pump
-        server.reportPump(true);
-        server.log("pump", "Pump ON");
-        led.setCyan();
-        pump.activateFor(PUMP_DURATION);
-        server.log("pump", "Pump OFF");
-
-        // Is it wet?
-        data = sensors.read();
-        server.sendData(data);
-        led.setGreen();
-        bool isDry = data.moisture < MOISTURE_THREADSHOLD;
-        if (isDry) {
-            //repeat? or error?
-            LOGLN("!warn! Still dry after watering. What to do, take a poo");
-            server.log("pump", "W: Still dry");
-            led.setOrange();
-        }
-    }
+    waterPump(data);
 
     ledIndicator(false);
     delay(INTERVAL_SECONDS * 1000);
+}
+
+void waterPump(SensorData data) {
+    if (PUMP) {
+        delay(1000);  // For debugging status led
+        // Should we water?
+        if (data.moisture < MOISTURE_THREADSHOLD) {
+            // Run pump
+            server.reportPump(true);
+            server.log("PUMP", "Pump ON");
+            led.setCyan();
+            pump.activateFor(PUMP_DURATION);
+            server.log("PUMP", "Pump OFF");
+
+            // Is it wet?
+            data = sensors.read();
+            server.sendData(data);
+            led.setGreen();
+            bool isDry = data.moisture < MOISTURE_THREADSHOLD;
+            if (isDry) {
+                //repeat? or error?
+                LOGLN("(PUMP) W: Still dry after watering. What to do, take a poo");
+                server.log("PUMP", "W: Still dry");
+                led.setOrange();
+            }
+        }
+    }
 }
 
 void ledStatus(bool success) {
