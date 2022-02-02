@@ -7,7 +7,7 @@
 
 Sensors::Sensors() {
     pinMode(MOISTURE_POWER, OUTPUT);
-    digitalWrite(MOISTURE_POWER, HIGH);
+    digitalWrite(MOISTURE_POWER, LOW);
 }
 
 SensorData Sensors::read() {
