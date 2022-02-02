@@ -24,6 +24,7 @@ void setup() {
     led.setBlue();
     display.begin();
     server.begin();
+    server.log("Boot", "Boot");
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
