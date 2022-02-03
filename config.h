@@ -4,10 +4,11 @@
 #include "Arduino.h"
 #include "secrets.h"
 
-#define SENSOR_NAME "test"       // Add unique name for this sensor
-#define INTERVAL_SECONDS 60      // Add measurement interval (e.g. 1 min)
-#define MOISTURE_THREADSHOLD 70  // Moisture % at which we should water the plants
-#define PUMP_DURATION 20         // Number of seconds to run the pump for watering
+#define SENSOR_NAME "test"          // Add unique name for this sensor
+#define INTERVAL_SECONDS 20         // Add measurement interval (e.g. 1 min)
+#define MOISTURE_THREADSHOLD 70     // Moisture % at which we should water the plants
+#define PUMP_DURATION 20            // Number of seconds to run the pump for watering
+#define RESET_TIMER_SECONDS 30 * 60  // Time interval at which the board will reset to avoid issues with battery charger timer fault after ~45 min. Set to -1 to disable.
 
 #define MOISTURE_POWER 7    // Which pin is soil moisture sensor connected to as a source of power (prevents fast corrosioon)
 #define MOISTURE_PIN A0     // Which pin is soil moisture sensor connected to

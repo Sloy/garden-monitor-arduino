@@ -10,8 +10,9 @@
 Sensors sensors;
 Display display;
 StatsServer server;
-WiFiLed led(0.1);
+WiFiLed led(0.01);
 Pump pump;
+unsigned long resetTime;
 
 void setup() {
     led.setPurple();
@@ -28,6 +29,7 @@ void setup() {
     server.begin();
     server.log("Boot", "Boot");
     pinMode(LED_BUILTIN, OUTPUT);
+    resetTime = (millis() / 1000) + RESET_TIMER_SECONDS;
 }
 
 void loop() {
@@ -45,6 +47,7 @@ void loop() {
 
     ledIndicator(false);
     wakeLock();
+    checkReset();
 }
 
 void waterPump(SensorData data) {
@@ -107,5 +110,23 @@ void ledIndicator(bool on) {
         digitalWrite(LED_BUILTIN, HIGH);
     } else {
         digitalWrite(LED_BUILTIN, LOW);
+    }
+}
+
+void checkReset() {
+    if (RESET_TIMER_SECONDS < 0) {
+        return;
+    }
+    long timeToReset = resetTime - (millis() / 1000);
+    if (timeToReset <= 0) {
+        led.setOrange();
+        LOGLN("(Reset) Time to reset reached. Reseting NOW...");
+        server.log("BOOT", "Rebooting because reset time was reached");
+        NVIC_SystemReset();
+        LOGLN("(Reset) ERROR: Reset function didn't succeed");
+    } else {
+        LOG("(Reset) Will reset after ");
+        LOG(timeToReset);
+        LOGLN("s");
     }
 }
