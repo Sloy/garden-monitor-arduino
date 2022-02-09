@@ -136,7 +136,7 @@ int StatsServer::sendToInfluxDB(SensorData data, int timestamp) {
 }
 
 bool StatsServer::log(String tag, String message) {
-    if (true | !SEND_DATA) {
+    if (!SEND_DATA) {
         return 200;
     }
     int ts = clock.now();
