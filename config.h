@@ -17,10 +17,10 @@
 #define BOARD_VOLTAGE 3.3   // What the operation voltage of the board (3.3, 5.0)
 
 #define LOGGER true            // Enable logging messages through Serial
-#define WAIT_FOR_LOGGER true   // Stops execution until there is a Serial connection for logging
+#define WAIT_FOR_LOGGER false  // Stops execution until there is a Serial connection for logging
 #define RGB_LED true           // Enable the MK1010 board RGB led for status indication
 #define DISPLAY_ENABLED false  // Whether the LCD screen is connected to show sensor data
-#define FAKE_SENSOR true       // Emit fake sensor data to test the code without connecting all sensors
+#define FAKE_SENSOR false      // Emit fake sensor data to test the code without connecting all sensors
 #define SEND_DATA true         // Enables sending data to the clod
 #define PUMP false             // Enables the connected pump when the moisture level drops below the threadshold.
 
