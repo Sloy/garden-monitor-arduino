@@ -70,6 +70,7 @@ int StatsServer::sendToGraphite(SensorData data, int timestamp) {
     String body = String("[") +
                   "{\"name\":\"" + SENSOR_NAME + ".temperature\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.temperature + ",\"time\":" + timestamp + "}," +
                   "{\"name\":\"" + SENSOR_NAME + ".moisture\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.moisture + ",\"time\":" + timestamp + "}," +
+                  "{\"name\":\"" + SENSOR_NAME + ".battery\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.batteryVoltage + ",\"time\":" + timestamp + "}," +
                   "{\"name\":\"" + SENSOR_NAME + ".light\",\"interval\":" + INTERVAL_SECONDS + ",\"value\":" + data.light + ",\"time\":" + timestamp + "}]";
     String endpoint = "/graphite/metrics";
     LOGLN("-------------");
@@ -104,7 +105,7 @@ int StatsServer::sendToInfluxDB(SensorData data, int timestamp) {
     if (!SEND_DATA) {
         return 200;
     }
-    String body = String("sensor temperature=") + data.temperature + ",moisture="+data.moisture+",light="+data.light;
+    String body = String("sensor temperature=") + data.temperature + ",moisture="+data.moisture+",light="+data.light+",battery="+data.batteryVoltage;
     String endpoint = String("/api/v2/write?org=") + INFLUX_ORG_ID + "&bucket=" + INFLUX_BUCKET + "&precision=s";
     ;
     LOGLN("-------------");

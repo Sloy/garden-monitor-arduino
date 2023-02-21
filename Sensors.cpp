@@ -11,7 +11,7 @@ Sensors::Sensors() {
 }
 
 SensorData Sensors::read() {
-    SensorData data = SensorData(readMoisture(), readTemperature(), readLight());
+    SensorData data = SensorData(readMoisture(), readTemperature(), readLight(), readBattery());
     LOG("Sensor data: ");
     LOG("Moisture=");
     LOG(data.moisture);
@@ -19,6 +19,8 @@ SensorData Sensors::read() {
     LOG(data.temperature);
     LOG("\tLight=");
     LOGLN(data.light);
+    LOG("\tBattery=");
+    LOGLN(data.batteryVoltage);
     return data;
 }
 
@@ -52,6 +54,11 @@ float Sensors::readTemperature() {
     float voltage = (tempValue / 1024.0) * BOARD_VOLTAGE;
     float temperature = (voltage - .5) * 100;
     return temperature;
+}
+float Sensors::readBattery() {
+    int sensorValue = analogRead(ADC_BATTERY);
+    // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 4.3V):
+    return sensorValue * (BOARD_VOLTAGE / 1023.0);
 }
 
 int Sensors::fakeMoisture() {
